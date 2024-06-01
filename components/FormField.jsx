@@ -19,7 +19,7 @@ const FormField = ({
         className="flex-1 text-white font-psemibold" 
         value={value}
         placeholder={placeHolder}
-        placeholderTextColor=""
+        placeholderTextColor="text-white"
         onChangeText={handleChangeText}
         secureTextEntry={ title==="Password" && !showPassword}
         />

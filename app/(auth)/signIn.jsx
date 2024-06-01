@@ -33,7 +33,7 @@ const SignIn = () => {
           <FormField
             title="Email"
             value={form.email}
-            handlChangeText={(e) => setForm({ ...form, email: e })}
+            handleChangeText={(e) => setForm({ ...form, email: e })}
             otherStyles="mt-7"
             keyBoardType="email-address"
           />
@@ -41,7 +41,7 @@ const SignIn = () => {
           <FormField
             title="Password"
             value={form.password}
-            handlChangeText={(e) => setForm({ ...form, password: e })}
+            handleChangeText={(e) => setForm({ ...form, password: e })}
             otherStyles="mt-5"
           />
           <CustomButton
