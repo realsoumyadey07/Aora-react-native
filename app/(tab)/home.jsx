@@ -9,11 +9,12 @@ import EmptyState from "../../components/EmptyState";
 import useAppWrite from "../../lib/useAppwrite";
 import { getAllPosts, getLatestPosts } from "../../lib/appwrite";
 import VideoCard from "../../components/VideoCard";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 const Home = () => {
   const { data: posts, refetch } = useAppWrite(getAllPosts);
   const { data: latestPosts } = useAppWrite(getLatestPosts);
-
+  const { user } = useGlobalContext();
   console.log(posts);
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = async()=> {
@@ -26,7 +27,6 @@ const Home = () => {
       <SafeAreaView className="bg-primary h-full">
         <FlatList
           data={posts}
-          // data={[]}
           keyExtractor={(item) => item.$id}
           renderItem={({ item }) => (
             <VideoCard video={item}/>
@@ -38,8 +38,8 @@ const Home = () => {
                   <Text className="font-pmedium text-sm text-gray-100">
                     Welcome Back
                   </Text>
-                  <Text className="text-2xl font-psemibold text-white">
-                    Aora
+                  <Text className="text-xl font-psemibold text-white">
+                    {user?.username}
                   </Text>
                 </View>
                 <View>
