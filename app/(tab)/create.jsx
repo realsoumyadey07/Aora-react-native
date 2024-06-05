@@ -6,7 +6,7 @@ import { View } from "react-native-animatable";
 import { ResizeMode, Video } from "expo-av";
 import { icons } from "../../constants";
 import CustomButton from "../../components/CustomButton";
-import * as DocumentPicker from "expo-document-picker";
+import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 
 const Create = () => {
@@ -19,11 +19,10 @@ const Create = () => {
   const [uploading, setUploading] = useState(false);
 
   const openPicker = async (selectType) => {
-    const result = await DocumentPicker.getDocumentAsync({
-      type:
-        selectType === "image"
-          ? ["image/png", "image/jpg"]
-          : ["video/mp4", "video/gif"],
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: selectType === 'image' ? ImagePicker.MediaTypeOptions.Images: ImagePicker.MediaTypeOptions.Videos,
+      aspect: [4, 3],
+      quality: 1,
     });
 
     if (!result.canceled) {
@@ -34,19 +33,16 @@ const Create = () => {
       if (selectType === "video") {
         setForm({ ...form, video: result.assets[0] });
       }
-    } else {
-      setTimeout(() => {
-        Alert.alert("Document picked", JSON.stringify(result, null, 2));
-      }, 100);
-    }
+    } 
   };
 
   const submit = () => {
     if (
-      [form.prompt, form.thumbnail, form.video, form.title].some(
-        (field) => field?.trim() === ""
-      )
-    ) {
+      (form.prompt === "") |
+      (form.title === "") |
+      !form.thumbnail |
+      !form.video
+    )  {
       Alert.alert("Please fill all the fields");
     }
     setUploading(true);
@@ -86,7 +82,6 @@ const Create = () => {
               <Video
                 source={{ uri: form.video.uri }}
                 className="w-full h-64 rounded-2xl"
-                useNativeControls
                 resizeMode={ResizeMode.CONTAIN}
                 isLooping
               />
