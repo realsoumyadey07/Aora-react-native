@@ -8,8 +8,10 @@ import { icons } from "../../constants";
 import CustomButton from "../../components/CustomButton";
 import * as DocumentPicker from "expo-document-picker";
 import { router } from "expo-router";
+import { useGlobalContext } from '../../context/GlobalProvider'
 
 const Create = () => {
+  const {user} = useGlobalContext();
   const [form, setForm] = useState({
     title: "",
     video: null,
@@ -41,20 +43,27 @@ const Create = () => {
     }
   };
 
-  const submit = () => {
+  const submit = async () => {
     if (
-      [form.prompt, form.thumbnail, form.video, form.title].some(
-        (field) => field?.trim() === ""
-      )
+      (form.prompt === "") |
+      (form.title === "") |
+      !form.thumbnail |
+      !form.video
     ) {
-      Alert.alert("Please fill all the fields");
+      return Alert.alert("Please provide all fields");
     }
+
     setUploading(true);
     try {
-      Alert.alert("success", "post uploaded successfully");
-      router.push('/home')
+      await createVideoPost({
+        ...form,
+        userId: user.$id,
+      });
+
+      Alert.alert("Success", "Post uploaded successfully");
+      router.push("/home");
     } catch (error) {
-      throw new Error("Error",error.message);
+      Alert.alert("Error", error.message);
     } finally {
       setForm({
         title: "",
@@ -62,9 +71,11 @@ const Create = () => {
         thumbnail: null,
         prompt: "",
       });
-      setUploading(false)
+
+      setUploading(false);
     }
   };
+
 
   return (
     <SafeAreaView className="bg-primary h-full">
