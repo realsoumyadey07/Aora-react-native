@@ -9,6 +9,7 @@ import CustomButton from "../../components/CustomButton";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import { useGlobalContext } from '../../context/GlobalProvider'
+import { createVideo } from "../../lib/appwrite";
 
 const Create = () => {
   const {user} = useGlobalContext();
@@ -44,18 +45,14 @@ const Create = () => {
       (form.title === "") |
       !form.thumbnail |
       !form.video
-<<<<<<< HEAD
     )  {
       Alert.alert("Please fill all the fields");
-=======
-    ) {
-      return Alert.alert("Please provide all fields");
->>>>>>> 9b61b4cfffc54bd7cf937617018d9b67b41ee9ba
+
     }
 
     setUploading(true);
     try {
-      await createVideoPost({
+      await createVideo({
         ...form,
         userId: user.$id,
       });
